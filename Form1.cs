@@ -37,19 +37,25 @@ namespace PlayMarioWorld
         {
             if(emulatorFound == false)
             {
-                for (int height = 0; height < Screen.PrimaryScreen.Bounds.Height; height++)
+                for (int height = 0; height < Screen.PrimaryScreen.Bounds.Height / 20; height++)
                 {
-                    for (int length = 0; length < Screen.PrimaryScreen.Bounds.Width; length++)
+                    for (int length = 0; length < Screen.PrimaryScreen.Bounds.Width / 20; length++)
                     {
-                        Bitmap screen = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+                        Bitmap screen = new Bitmap(Screen.PrimaryScreen.Bounds.Width / 20, Screen.PrimaryScreen.Bounds.Height / 20);
                         Graphics g = Graphics.FromImage(screen);
                         g.CopyFromScreen(length, height, referenceSprite.Width, referenceSprite.Height, referenceSprite.Size);
+                        g.Dispose();
 
                         pictureBox1.Image = screen;
 
-                        if (TestForMatch(referenceSprite, screen))
+                        if(TestForMatch(referenceSprite, screen))
                         {
                             emulatorFound = true;
+                            Log.Items.Add("Mario was found!");
+                        }
+                        else
+                        {
+
                         }
                     }
                 }
@@ -74,7 +80,7 @@ namespace PlayMarioWorld
                 int totalMatches = 0;
                 for(int x = 0; x < sample.Width; x++)
                 {
-                    for(int y = 0; y < sample.Height; y++)
+                    for(int y = sample.Height; y > 1; y--)
                     {
                         if(sample.GetPixel(x, y) == referenceSprite.GetPixel(x, y))
                         {
@@ -90,9 +96,7 @@ namespace PlayMarioWorld
                 }
                 else
                 {
-                    Log.Items.Add("FAILED: Image not found");
-                    Log.Items.Add("     Total Matches: " + totalMatches);
-                    Log.Items.Add("     Percent Match:" + totalMatches * 100 / totalSamplePixels + "%");
+                    Log.Items.Add("     ...");
                     return false;
                 }
             }
@@ -116,7 +120,7 @@ namespace PlayMarioWorld
             Bitmap referenceSprite = mario_1;
             Bitmap screen = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             Graphics g = Graphics.FromImage(screen);
-            g.CopyFromScreen(length, height, referenceSprite.Width, referenceSprite.Height * 50, referenceSprite.Size);
+            g.CopyFromScreen(length, height, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, screen.Size);
 
             pictureBox1.Image = screen;
         }
